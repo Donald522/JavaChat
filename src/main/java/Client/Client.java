@@ -14,7 +14,7 @@ public class Client {
     private Connector connection;
     private ExecutorService pool;
     private ClientReceiver clientReceiver;
-    private Object objectMonitor;
+    private volatile Object objectMonitor = new Object();
 
     public Client(String serverName) {
         connection = new Connector(serverName);
