@@ -20,6 +20,7 @@ class ServerConnector {
             e.printStackTrace();
         }
         this.sender = new MessageSender(clientList);
+        sender.start();
     }
 
     public void run() {
