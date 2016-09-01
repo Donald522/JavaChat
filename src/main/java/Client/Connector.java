@@ -1,18 +1,17 @@
 package Client;
 
-import java.io.BufferedOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
+import java.io.*;
 import java.net.Socket;
 
 /**
  * Created by Java_10 on 01.09.2016.
  */
 public class Connector {
-    private OutputStreamWriter outStream;
+    private PrintWriter outStream;
+    private BufferedReader inputStream;
     private String serverName = "localhost";
-    private Socket socket;
-    int port = 27015;
+    private volatile Socket socket;
+    private int port = 27015;
 
     public Connector(String serverName) {
         this.serverName = serverName;
@@ -29,11 +28,16 @@ public class Connector {
 
     public void connect() throws IOException {
         socket = new Socket(serverName, port);
-        outStream = new OutputStreamWriter(
-                new BufferedOutputStream(
-                        socket.getOutputStream()
-                )
-        );
+        outStream = new PrintWriter(
+                new OutputStreamWriter(
+                        new BufferedOutputStream(
+                                socket.getOutputStream()
+                        ), "UTF-8"));
+        inputStream = new BufferedReader(
+                new InputStreamReader(
+                        new BufferedInputStream(
+                            socket.getInputStream()
+                        ), "UTF-8"));
     }
 
     public Socket getSocket() {
@@ -45,7 +49,11 @@ public class Connector {
 
     }
 
-    public OutputStreamWriter getOutputStream() {
+    public PrintWriter getOutputStream() {
         return outStream;
+    }
+
+    public BufferedReader getInputStream() {
+        return inputStream;
     }
 }

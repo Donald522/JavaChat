@@ -7,7 +7,7 @@ public class ClientSession implements Runnable {
     private volatile boolean shutdown;
     private Socket client;
     private BufferedReader br;
-    private OutputStreamWriter bw;
+    private PrintWriter bw;
     private MessageSender sender;
 
     public ClientSession(Socket client, MessageSender sender) {
@@ -18,7 +18,15 @@ public class ClientSession implements Runnable {
                     new InputStreamReader(
                             new BufferedInputStream(
                                     this.client.getInputStream()
-                            )
+                            ), "UTF-8"
+                    )
+            );
+
+            this.bw = new PrintWriter(
+                    new OutputStreamWriter(
+                            new BufferedOutputStream(
+                                    this.client.getOutputStream()
+                            ), "UTF-8"
                     )
             );
 
@@ -31,6 +39,7 @@ public class ClientSession implements Runnable {
         while (client.isConnected()) {
             try {
                 String line = br.readLine();
+                System.out.println(line);
                 if (line != null) {
                     if(line.equals("/hist"))
                     {
@@ -60,12 +69,9 @@ public class ClientSession implements Runnable {
     }
 
     public void write(String line) {
-        try {
-            if(bw!=null) {
-                bw.write(line);
-            }
-        } catch (IOException e) {
-            System.out.println("clientDead");
+        if(bw!=null) {
+            bw.write(line);
+            bw.flush();
         }
     }
     public void close(){

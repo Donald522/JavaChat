@@ -11,35 +11,37 @@ import java.util.concurrent.Executors;
  */
 public class Client {
 
-    private Connector connection;
-    private ExecutorService pool;
+    private volatile Connector connection;
     private ClientReceiver clientReceiver;
-    private volatile Object objectMonitor = new Object();
+    private ClientSender clientSender;
 
     public Client(String serverName) {
         connection = new Connector(serverName);
-        pool = Executors.newSingleThreadExecutor();
-    }
-
-    public void send() {
-        pool.execute(new ClientSender(connection, objectMonitor));
     }
 
     public void openSession() throws PrinterAppendException {
         try {
             connection.connect();
-            send();
-            clientReceiver = new ClientReceiver(connection.getSocket());
-            clientReceiver.receiveMessage(objectMonitor);
+            clientSender = new ClientSender(connection);
+            clientSender.run();
         } catch (IOException e) {
-            throw new PrinterAppendException("can't connect", e);
+            throw new PrinterAppendException("Can't connect", e);
         }
+    }
+
+    public void send() {
+        //pool.execute(new ClientSender(connection, objectMonitor));
+//        try {
+//            connection.getOutputStream().write("Message");
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+        new ClientSender(connection).run();
     }
 
     public void closeSession() throws PrinterAppendException {
         try {
             connection.closeConnection();
-            pool.shutdown();
         } catch (IOException e) {
             throw new PrinterAppendException("can't connect", e);
         }
