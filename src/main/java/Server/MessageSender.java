@@ -7,13 +7,15 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.concurrent.LinkedBlockingQueue;
 
 public class MessageSender extends Thread {
     private Collection<ClientSession> clientList;
-    private Queue<String> messages = new LinkedList<String>();
+    private Queue<Message> messages = null;
     private MessageHistory history = new MessageHistory("history.txt");
 
-    public MessageSender(Collection<ClientSession> clientList) {
+    public MessageSender(Collection<ClientSession> clientList, Queue<Message> messages) {
+        this.messages = messages;
         this.clientList = clientList;
         try {
             history.openSession();
@@ -22,59 +24,77 @@ public class MessageSender extends Thread {
         }
     }
 
-    public void sendMessage(String line) {
-        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+    public void sendMessage(String line, String userName) {
+
         Date date = new Date();
         line=line.substring(4);
         if(line.length()>1 && line.length()<151) {
-            synchronized (messages) {
-                messages.add(dateFormat.format(date) + ":" + line + System.lineSeparator());
-            }
+          //      messages.add(dateFormat.format(date) + ":" + line + System.lineSeparator());
         }
     }
 
     @Override
     public void run() {
         while (!isInterrupted()) {
-            synchronized (messages) {
+            if (messages.size() > 0) {
 
-                if (messages.size() > 0) {
-                    System.out.print(messages.size());
-
-                    String messageToSend = messages.remove();
-                    System.out.print(messageToSend);
-                    try {
-                        history.print(messageToSend);
-                        history.closeSession();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    for (ClientSession client : clientList) {
-
-                        synchronized (client) {
-                            if (client.isConnected()) {
-                                client.write(messageToSend);
-                            } else {
-                                synchronized (clientList) {
-                                    clientList.remove(client);
-                                }
-                            }
+                        Message messageToSend = messages.remove();
+                        if(messageToSend.isPublic()) {
+                            sendPublicMessage(messageToSend.decoratedMessage());
                         }
+                        if(messageToSend.isHistorical()) {
+                            saveMessageToHistory(messageToSend.decoratedMessage());
+                        }
+                        if(messageToSend.isHistoryReqest()) {
+                            sendHistory(messageToSend.getClient());
+                        }
+                        if(messageToSend.isErrorMessage()){
+                            sendErrorMessage(messageToSend.getClient(),messageToSend.getTextLine());
+                        }
+                        System.out.print(messageToSend);
                     }
+                }
+            }
+
+    public void sendHistory(ClientSession client) {
+
+        List<String> stringList = null;
+        stringList = history.readLines();
+        synchronized (client) {
+            for(String str : stringList) {
+                client.write(str + System.lineSeparator());
+            }
+        }
+    }
+    public void sendPublicMessage(String decoratedMessage) {
+
+        for (ClientSession client : clientList) {
+            synchronized (client) {
+                if (client.isConnected()) {
+                    client.write(decoratedMessage);
+                    System.out.print(decoratedMessage);
+                } else {
+                    clientList.remove(client);
+                    client.close();
+
                 }
             }
         }
     }
 
-    public void sendHistory(ClientSession clientSession) {
 
-        List<String> stringList = null;
-        stringList = history.readLines();
-        synchronized (clientSession) {
-                for(String str : stringList) {
-                    System.out.println(str);
-                    clientSession.write(str + System.lineSeparator());
-                }
+    public void sendErrorMessage(ClientSession client,String message) {
+        client.write("=============================" + System.lineSeparator() + System.lineSeparator());
+        client.write(message + System.lineSeparator());
+        client.write(System.lineSeparator() + System.lineSeparator() + "=============================");
+    }
+
+    public void saveMessageToHistory(String decoratedMessage) {
+        try {
+            history.print(decoratedMessage);
+            history.closeSession();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }

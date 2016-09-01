@@ -2,17 +2,18 @@ package Server;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.Queue;
 
 public class ClientSession implements Runnable {
     private volatile boolean shutdown;
     private Socket client;
     private BufferedReader br;
     private PrintWriter bw;
-    private MessageSender sender;
+    private Queue<Message> messages;
 
-    public ClientSession(Socket client, MessageSender sender) {
+    public ClientSession(Socket client, Queue<Message> messages) {
         this.client = client;
-        this.sender = sender;
+        this.messages = messages;
         try {
             this.br = new BufferedReader(
                     new InputStreamReader(
@@ -40,15 +41,9 @@ public class ClientSession implements Runnable {
             try {
                 String line = br.readLine();
                 System.out.println(line);
-                if (line != null) {
-                    if(line.equals("/hist"))
-                    {
-                        sender.sendHistory(this);
-                    }
-                    if(line.startsWith("/snd"))
-                    {
-                        sender.sendMessage(line);
-                    }
+                if (line != null && line.length()>0) {
+                    Message message = new Message(line,this);
+                    messages.add(message);
                 }
             } catch (IOException e) {
                 e.printStackTrace();
