@@ -37,7 +37,9 @@ public class ClientReceiver {
             try {
                 String line = br.readLine();
                 if (line != null) {
-                    System.out.println(line);
+                    synchronized (System.console()) {
+                        System.out.println(line);
+                    }
                 }
             } catch (IOException e) {
                 e.printStackTrace();

@@ -9,8 +9,6 @@ public class runner {
     public static void main(String[] args) throws PrinterAppendException {
         Client client = new Client("localhost");
         client.openSession();
-        client.print("hello world!");
-        client.print("goodbye world!");
         client.closeSession();
     }
 }

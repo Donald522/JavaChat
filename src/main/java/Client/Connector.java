@@ -11,6 +11,7 @@ import java.net.Socket;
 public class Connector {
     private OutputStreamWriter outStream;
     private String serverName = "localhost";
+    private Socket socket;
     int port = 27015;
 
     public Connector(String serverName) {
@@ -27,12 +28,16 @@ public class Connector {
     }
 
     public void connect() throws IOException {
-
+        socket = new Socket(serverName, port);
         outStream = new OutputStreamWriter(
                 new BufferedOutputStream(
-                        new Socket(serverName, port).getOutputStream()
+                        socket.getOutputStream()
                 )
         );
+    }
+
+    public Socket getSocket() {
+        return socket;
     }
 
     public void closeConnection() throws IOException {
