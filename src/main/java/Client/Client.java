@@ -11,9 +11,10 @@ import java.util.concurrent.Executors;
  */
 public class Client {
 
-    private Connector connection;
+    private volatile Connector connection;
     private ExecutorService pool;
     private ClientReceiver clientReceiver;
+    private ClientSender clientSender;
     private volatile Object objectMonitor = new Object();
 
     public Client(String serverName) {
@@ -21,19 +22,28 @@ public class Client {
         pool = Executors.newSingleThreadExecutor();
     }
 
-    public void send() {
-        pool.execute(new ClientSender(connection, objectMonitor));
-    }
-
     public void openSession() throws PrinterAppendException {
         try {
             connection.connect();
-            send();
-            clientReceiver = new ClientReceiver(connection.getSocket());
-            clientReceiver.receiveMessage(objectMonitor);
+            clientSender = new ClientSender(connection, objectMonitor);
+            pool.execute(clientSender);
+//            clientSender = new ClientSender(connection, objectMonitor);
+//            clientSender.run();
+//            clientReceiver = new ClientReceiver(connection.getSocket());
+//            clientReceiver.receiveMessage(objectMonitor);
         } catch (IOException e) {
-            throw new PrinterAppendException("can't connect", e);
+            throw new PrinterAppendException("Can't connect", e);
         }
+    }
+
+    public void send() {
+        //pool.execute(new ClientSender(connection, objectMonitor));
+//        try {
+//            connection.getOutputStream().write("Message");
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+        new ClientSender(connection, objectMonitor).run();
     }
 
     public void closeSession() throws PrinterAppendException {

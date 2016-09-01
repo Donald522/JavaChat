@@ -17,7 +17,7 @@ public class ClientSession implements Runnable {
                     new InputStreamReader(
                             new BufferedInputStream(
                                     this.client.getInputStream()
-                            )
+                            ), "UTF-8"
                     )
             );
         } catch (IOException e) {
@@ -29,6 +29,7 @@ public class ClientSession implements Runnable {
         while (client.isConnected()) {
             try {
                 String line = br.readLine();
+                System.out.println(line);
                 if (line != null) {
                     if(line.equals("/hist"))
                     {
