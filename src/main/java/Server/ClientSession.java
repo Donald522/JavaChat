@@ -9,8 +9,9 @@ public class ClientSession implements Runnable {
     private OutputStreamWriter bw;
     private MessageSender sender;
 
-    public ClientSession(Socket client) {
+    public ClientSession(Socket client, MessageSender sender) {
         this.client = client;
+        this.sender = sender;
         try {
             this.br = new BufferedReader(
                     new InputStreamReader(
