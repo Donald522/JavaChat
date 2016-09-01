@@ -3,13 +3,15 @@ package Server;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-class ServerConnector{
+class ServerConnector {
     private ServerSocket server;
-    private List<ClientSession> clientList = new ArrayList<ClientSession>();
+    private Collection<ClientSession> clientList = new LinkedList<ClientSession>();
     private MessageSender sender;
     public ServerConnector(int port){
         try {
@@ -23,12 +25,12 @@ class ServerConnector{
     public void run() {
         ExecutorService pool = Executors.newFixedThreadPool(3);
 
-        while (true){
+        while (true) {
             try {
-                ClientSession client = new ClientSession(this.server.accept(),sender);
-                pool.execute(client);
-                clientList.add(client);
-
+                ClientSession clientSession = new ClientSession(this.server.accept(),sender);
+                System.out.println("connected");
+                pool.execute(clientSession);
+                clientList.add(clientSession);
             } catch (IOException e) {
                 e.printStackTrace();
             }

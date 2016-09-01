@@ -29,7 +29,7 @@ public class ClientReceiver {
 
     public void receiveMessage(Object objectMonitor) {
         while (socket.isConnected()) {
-            synchronized (objectMonitor) {
+//            synchronized (objectMonitor) {
                 try {
                     socket.getOutputStream().write(0);
                 } catch (IOException e) {
@@ -43,7 +43,7 @@ public class ClientReceiver {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-            }
+//            }
         }
     }
 }

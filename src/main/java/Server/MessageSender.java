@@ -1,14 +1,15 @@
 package Server;
 
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
 public class MessageSender extends Thread {
-    private List<ClientSession> clientList;
+    private Collection<ClientSession> clientList;
     private Queue<String> messages = new LinkedList<String>();
 
-    public MessageSender(List<ClientSession> clientList) {
+    public MessageSender(Collection<ClientSession> clientList) {
         this.clientList = clientList;
     }
 
