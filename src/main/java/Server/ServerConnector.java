@@ -25,7 +25,7 @@ class ServerConnector {
     }
 
     public void run() {
-        ExecutorService pool = Executors.newFixedThreadPool(3);
+        ExecutorService pool = Executors.newFixedThreadPool(5000);
 
         while (true) {
             try {
