@@ -26,7 +26,7 @@ public class MessageSender extends Thread {
         DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
         Date date = new Date();
         line=line.substring(4);
-        if(line.length()>1) {
+        if(line.length()>1 && line.length()<151) {
             synchronized (messages) {
                 messages.add(dateFormat.format(date) + ":" + line + System.lineSeparator());
 
