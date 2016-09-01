@@ -27,22 +27,22 @@ public class ClientReceiver {
         }
     }
 
-    public void receiveMessage() {
+    public void receiveMessage(Object objectMonitor) {
         while (socket.isConnected()) {
-            try {
-                socket.getOutputStream().write(0);
-            } catch (IOException e) {
-                break;
-            }
-            try {
-                String line = br.readLine();
-                if (line != null) {
-                    synchronized (System.console()) {
-                        System.out.println(line);
-                    }
+            synchronized (objectMonitor) {
+                try {
+                    socket.getOutputStream().write(0);
+                } catch (IOException e) {
+                    break;
                 }
-            } catch (IOException e) {
-                e.printStackTrace();
+                try {
+                    String line = br.readLine();
+                    if (line != null) {
+                            System.out.println(line);
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }

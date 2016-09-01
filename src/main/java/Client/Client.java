@@ -14,6 +14,7 @@ public class Client {
     private Connector connection;
     private ExecutorService pool;
     private ClientReceiver clientReceiver;
+    private Object objectMonitor;
 
     public Client(String serverName) {
         connection = new Connector(serverName);
@@ -21,7 +22,7 @@ public class Client {
     }
 
     public void send() {
-        pool.execute(new ClientSender(connection));
+        pool.execute(new ClientSender(connection, objectMonitor));
     }
 
     public void openSession() throws PrinterAppendException {
@@ -29,7 +30,7 @@ public class Client {
             connection.connect();
             send();
             clientReceiver = new ClientReceiver(connection.getSocket());
-            clientReceiver.receiveMessage();
+            clientReceiver.receiveMessage(objectMonitor);
         } catch (IOException e) {
             throw new PrinterAppendException("can't connect", e);
         }
