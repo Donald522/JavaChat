@@ -13,7 +13,8 @@ class ServerConnector {
     private ServerSocket server;
     private Collection<ClientSession> clientList = new LinkedList<ClientSession>();
     private MessageSender sender;
-    public ServerConnector(int port){
+
+    public ServerConnector(int port) {
         try {
             this.server = new ServerSocket(port);
         } catch (IOException e) {
@@ -28,10 +29,11 @@ class ServerConnector {
 
         while (true) {
             try {
-                ClientSession clientSession = new ClientSession(this.server.accept(),sender);
-                System.out.println("connected");
+                ClientSession clientSession = new ClientSession(this.server.accept(), sender);
                 pool.execute(clientSession);
-                clientList.add(clientSession);
+                synchronized (clientList) {
+                    clientList.add(clientSession);
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }

@@ -23,48 +23,47 @@ public class ClientSession implements Runnable {
         } catch (IOException e) {
             e.printStackTrace();
         }
-//        try {
-//            bw = new OutputStreamWriter(
-//                    new BufferedOutputStream(
-//                            this.client.getOutputStream()
-//                    )
-//            );
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
     }
 
     public void run() {
-        System.out.println("clientSession run");
         while (client.isConnected()) {
             try {
-                client.getOutputStream().write(1);
-            } catch (IOException e) {
-                System.out.println("break");
-                break;
-            }
-            try {
-                System.out.println("clientSession receive mess");
                 String line = br.readLine();
-                System.out.println("readLine End");
-                System.out.println(line);
                 if (line != null) {
-                    System.out.println("readed ");
-                    sender.sendMessage(line);
-                    System.out.print(line);
+                    if(line.equals("/hist"))
+                    {
+                        sender.sendHistory(this);
+                    }
+                    if(line.startsWith("/snd"))
+                    {
+                        sender.sendMessage(line);
+                    }
                 }
             } catch (IOException e) {
                 e.printStackTrace();
             }
+            if(!isConnected()){
+                break;
+            }
         }
-        System.out.println("clientSession end");
+    }
+
+    public boolean isConnected(){
+        try {
+            client.getOutputStream().write(1);
+            return true;
+        } catch (IOException e) {
+            return false;
+        }
     }
 
     public void write(String line) {
         try {
-            bw.write(line);
+            if(bw!=null) {
+                bw.write(line);
+            }
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("clientDead");
         }
     }
 }
