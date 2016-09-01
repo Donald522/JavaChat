@@ -8,6 +8,7 @@ import java.net.Socket;
  */
 public class Connector {
     private PrintWriter outStream;
+    private BufferedReader inputStream;
     private String serverName = "localhost";
     private volatile Socket socket;
     private int port = 27015;
@@ -32,6 +33,11 @@ public class Connector {
                         new BufferedOutputStream(
                                 socket.getOutputStream()
                         ), "UTF-8"));
+        inputStream = new BufferedReader(
+                new InputStreamReader(
+                        new BufferedInputStream(
+                            socket.getInputStream()
+                        ), "UTF-8"));
     }
 
     public Socket getSocket() {
@@ -45,5 +51,9 @@ public class Connector {
 
     public PrintWriter getOutputStream() {
         return outStream;
+    }
+
+    public BufferedReader getInputStream() {
+        return inputStream;
     }
 }

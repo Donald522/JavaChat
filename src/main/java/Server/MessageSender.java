@@ -29,7 +29,6 @@ public class MessageSender extends Thread {
         if(line.length()>1 && line.length()<151) {
             synchronized (messages) {
                 messages.add(dateFormat.format(date) + ":" + line + System.lineSeparator());
-
             }
         }
     }
