@@ -4,6 +4,7 @@ import java.io.*;
 import java.net.Socket;
 
 public class ClientSession implements Runnable {
+    private volatile boolean shutdown;
     private Socket client;
     private BufferedReader br;
     private OutputStreamWriter bw;
@@ -20,6 +21,7 @@ public class ClientSession implements Runnable {
                             )
                     )
             );
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -64,6 +66,15 @@ public class ClientSession implements Runnable {
             }
         } catch (IOException e) {
             System.out.println("clientDead");
+        }
+    }
+    public void close(){
+        try {
+            bw.close();
+            br.close();
+            client.close();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }

@@ -36,7 +36,7 @@ public class MessageSender extends Thread {
 
     @Override
     public void run() {
-        while (true) {
+        while (!isInterrupted()) {
             synchronized (messages) {
 
                 if (messages.size() > 0) {

@@ -10,10 +10,11 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 class ServerConnector {
+
     private ServerSocket server;
     private Collection<ClientSession> clientList = new LinkedList<ClientSession>();
     private MessageSender sender;
-
+    boolean working = true;
     public ServerConnector(int port) {
         try {
             this.server = new ServerSocket(port);
@@ -27,7 +28,7 @@ class ServerConnector {
     public void run() {
         ExecutorService pool = Executors.newFixedThreadPool(5000);
 
-        while (true) {
+        while (working) {
             try {
                 ClientSession clientSession = new ClientSession(this.server.accept(), sender);
                 pool.execute(clientSession);
@@ -41,4 +42,17 @@ class ServerConnector {
 
     }
 
+    public void close(){
+        try {
+            for(ClientSession session: clientList){
+                session.close();
+
+            }
+            server.close();
+            sender.interrupt();
+            working = false;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }
