@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-class ServerConnector extends Thread{
+class ServerConnector{
     private ServerSocket server;
     private List<ClientSession> clientList = new ArrayList<ClientSession>();
     private MessageSender sender;
@@ -19,7 +19,7 @@ class ServerConnector extends Thread{
         }
         this.sender = new MessageSender(clientList);
     }
-    @Override
+
     public void run() {
         ExecutorService pool = Executors.newFixedThreadPool(3);
 
