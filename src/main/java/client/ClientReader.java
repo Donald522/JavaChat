@@ -44,7 +44,7 @@ public class ClientReader {
     }
 
     public void run() {
-        listenerToWriterThread = new Thread(new ListenerToWriter(writerPort));
+        listenerToWriterThread = new Thread(new ListenerToWriter(writerPort, receiverFromServerThread));
         listenerToWriterThread.start();
         receiverFromServerThread = new Thread(new ReceiverFromServer());
         receiverFromServerThread.setDaemon(true);
@@ -67,8 +67,10 @@ public class ClientReader {
         private Socket client;
         private BufferedReader in;
         private final int writerPort;
+        private Thread receiverFromServerThread;
 
-        public ListenerToWriter(int writerPort) {
+        public ListenerToWriter(int writerPort, Thread receiverFromServerThread) {
+            this.receiverFromServerThread = receiverFromServerThread;
             this.writerPort = writerPort;
             try {
                 serverSocket = new ServerSocket(writerPort);
@@ -100,6 +102,7 @@ public class ClientReader {
                         if (Commands.checkExitCommand(line)) {
                             System.out.println(line);
                             out.println(line);
+                            close();
                             return;
                         }
                         out.println(line);
@@ -117,6 +120,9 @@ public class ClientReader {
 
         private void close() {
             try {
+                if (receiverFromServerThread != null && receiverFromServerThread.isAlive()) {
+                    receiverFromServerThread.interrupt();
+                }
                 serverSocket.close();
                 client.close();
                 in.close();
@@ -147,10 +153,12 @@ public class ClientReader {
                 in = new BufferedReader(
                                         new InputStreamReader(
                                                 socketToServer.getInputStream()));
-                while(socketToServer.isConnected()) {
+                while(socketToServer.isConnected() & !Thread.currentThread().isInterrupted()) {
                     try {
                         message = in.readLine();
-                        System.out.println(message);
+                        if (Commands.checkLenght(message)) {
+                            System.out.println(message);
+                        }
                     } catch (IOException e) {
                         close();
                         return;

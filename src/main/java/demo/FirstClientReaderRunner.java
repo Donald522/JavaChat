@@ -3,19 +3,19 @@ package demo;
 import client.ClientReader;
 import exceptions.ClientException;
 
-import static com.sun.xml.internal.ws.spi.db.BindingContextFactory.LOGGER;
+import java.util.logging.Logger;
 
-/**
- * Created by anton on 01.09.16.
- */
 public class FirstClientReaderRunner {
     public static void main(String[] args) {
+
+        Logger log = Logger.getLogger(FirstClientReaderRunner.class.getName());
+
         ClientReader clientReader = null;
         try {
             clientReader = new ClientReader(1112);
             clientReader.run();
         } catch (ClientException e) {
-            LOGGER.info("Can't connect to the server");
+            log.info("Can't connect to the server");
         }
     }
 }
