@@ -1,6 +1,6 @@
 package server;
 
-import commands.MessageChecker;
+import commands.CheckCommands;
 import exceptions.ClientSessionException;
 
 import java.io.*;
@@ -53,7 +53,7 @@ public class ClientSession implements Runnable {
                 String line = readerFromSocket.readLine();
                 System.out.println(line);
                 if (line != null && line.length()>0) {
-                    if(MessageChecker.checkExitCommand(line)) {
+                    if(CheckCommands.checkExitCommand(line)) {
                         this.close();
                         break;
                     }

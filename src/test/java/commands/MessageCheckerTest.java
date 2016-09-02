@@ -9,27 +9,27 @@ public class MessageCheckerTest {
 
     @Test
     public void shouldCheckSndCorrect () {
-        assert (MessageChecker.checkSndCommand("/snd /snd"));
-        assert (!MessageChecker.checkSndCommand("snd /snd"));
+        assert (CheckCommands.checkSndCommand("/snd /snd"));
+        assert (!CheckCommands.checkSndCommand("snd /snd"));
     }
 
     @Test
     public void shouldCheckHistCommand () {
-        assert (MessageChecker.checkHistCommand("/hist /snd"));
-        assert (!MessageChecker.checkHistCommand("/snd     "));
+        assert (CheckCommands.checkHistCommand("/hist /snd"));
+        assert (!CheckCommands.checkHistCommand("/snd     "));
     }
 
     @Test
     public void shouldCheckExitCommand () {
-        assert (MessageChecker.checkExitCommand("/exit"));
-        assert (!MessageChecker.checkExitCommand("/snd /snd"));
+        assert (CheckCommands.checkExitCommand("/exit"));
+        assert (!CheckCommands.checkExitCommand("/snd /snd"));
     }
 
     @Test
     public void shouldCheckLengthCorrect () {
-        assert (!MessageChecker.checkLength(""));
-        assert (!MessageChecker.checkLength("/snd 123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890"));
-        assert (MessageChecker.checkLength("alalalalala"));
+        assert (!CheckCommands.checkLength(""));
+        assert (!CheckCommands.checkLength("/snd 123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890"));
+        assert (CheckCommands.checkLength("alalalalala"));
     }
 
 }

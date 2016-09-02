@@ -8,7 +8,7 @@ import java.net.Socket;
 import java.util.Scanner;
 import java.util.logging.Logger;
 
-import static commands.MessageChecker.*;
+import static commands.CheckCommands.*;
 
 public class ClientWriter {
 
