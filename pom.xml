@@ -31,8 +31,8 @@
                 <configuration>
                     <targetClasses>
                         <param>Client.*</param>
-                        <param>Server.*</param>
-                        <param>Exceptions.*</param>
+                        <param>server.*</param>
+                        <param>exceptions.*</param>
                     </targetClasses>
                     <targetTests>
                         <param>iteration1.*</param>
