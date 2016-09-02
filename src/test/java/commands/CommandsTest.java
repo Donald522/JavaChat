@@ -11,11 +11,6 @@ public class CommandsTest {
     public void shouldCheckSndCorrect () {
         Commands tst = new Commands();
         assert (Commands.checkSndCommand("/snd /snd"));
-    }
-
-    @Test
-    public void shouldNotCheckSndForUncorrect () {
-        Commands tst = new Commands();
         assert (!Commands.checkSndCommand("snd /snd"));
     }
 
@@ -23,11 +18,6 @@ public class CommandsTest {
     public void shouldCheckHistCommand () {
         Commands tst = new Commands();
         assert (Commands.checkHistCommand("/hist /snd"));
-    }
-
-    @Test
-    public void shouldNotCheckHistCommandForUncorrect () {
-        Commands tst = new Commands();
         assert (!Commands.checkHistCommand("/snd     "));
     }
 
@@ -35,11 +25,15 @@ public class CommandsTest {
     public void shouldCheckExitCommand () {
         Commands tst = new Commands();
         assert (Commands.checkExitCommand("/exit"));
+        assert (!Commands.checkExitCommand("/snd /snd"));
     }
 
     @Test
-    public void shouldNotCheckExitCommandForUncorrect () {
+    public void shouldCheckLengthCorrect () {
         Commands tst = new Commands();
-        assert (!Commands.checkExitCommand("/snd /snd"));
+        assert (!Commands.checkLenght(""));
+        assert (!Commands.checkLenght("/snd 123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890"));
+        assert (Commands.checkLenght("alalalalala"));
     }
+
 }
