@@ -23,7 +23,7 @@ public class Message {
     boolean errorMessage = false;
     boolean nameCommand = false;
 
-    public Message(String textLine,ClientSession client,String name) {
+    public Message(String textLine, ClientSession client, String name) {
 
         this.date = new Date();
         this.textLine = textLine;
@@ -32,36 +32,35 @@ public class Message {
         setTypes();
     }
 
-    public Message(String textLine,ClientSession client) {
-        this(textLine,client,null);
+    public Message(String textLine, ClientSession client) {
+        this(textLine, client, null);
     }
 
-    private void setTypes(){
+    private void setTypes() {
 
-        if(CheckCommands.checkSndCommand(textLine)){
-            textLine=textLine.substring(4);
+        if (CheckCommands.checkSndCommand(textLine)) {
+            textLine = textLine.substring(4);
             publicMessage = true;
             historical = true;
         }
 
-        if(CheckCommands.checkHistCommand(textLine)){
-            historyReqest= true;
+        if (CheckCommands.checkHistCommand(textLine)) {
+            historyReqest = true;
         }
 
-        if(!CheckCommands.checkLength(textLine)){
+        if (!CheckCommands.checkLength(textLine)) {
             errorMessage = true;
             publicMessage = false;
             historical = false;
             textLine = "=========>your message over 150 chars <==============" + System.lineSeparator();
         }
 
-        if(CheckCommands.checkNameCommand(textLine)){
-            textLine=textLine.substring(5).trim();
+        if (CheckCommands.checkNameCommand(textLine)) {
+            textLine = textLine.substring(5).trim();
             nameCommand = true;
         }
 
-        if(!nameCommand && this.name == null && !errorMessage)
-        {
+        if (!nameCommand && this.name == null && !errorMessage) {
             errorMessage = true;
             publicMessage = false;
             historical = false;
@@ -71,8 +70,9 @@ public class Message {
 
     public String decoratedMessage() {
         DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-        return this.name + " " + dateFormat.format(date) + ":" + textLine + System.lineSeparator();
+        return dateFormat.format(date) + ":" + this.name + " " + ":" + textLine + System.lineSeparator();
     }
+
     public String getTextLine() {
         return textLine;
     }
