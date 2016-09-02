@@ -3,7 +3,7 @@ package commands;
 /**
  * Created by Dmitriy on 02.09.2016.
  */
-public class CheckCommands {
+public abstract class CheckCommands {
     public static boolean checkSndCommand(String message) {
         if (message != null && message.startsWith("/snd")) {
             return true;
@@ -40,14 +40,14 @@ public class CheckCommands {
     }
 
     public static boolean checkNameChangedCommand(String message) {
-        if (message != null && message.equals("nameChanged")) {
+        if (message != null && "nameChanged".equals(message)) {
             return true;
         }
         return false;
     }
 
     public static boolean checkNameNotChangedCommand(String message) {
-        if (message != null && message.equals("nameNotChanged")) {
+        if (message != null && "nameNotChanged".equals(message)) {
             return true;
         }
         return false;
