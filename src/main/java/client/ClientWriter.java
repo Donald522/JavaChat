@@ -6,8 +6,8 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Scanner;
+import java.util.logging.Logger;
 
-import static com.sun.xml.internal.ws.spi.db.BindingContextFactory.LOGGER;
 import static commands.Commands.checkExitCommand;
 import static commands.Commands.checkHistCommand;
 import static commands.Commands.checkSndCommand;
@@ -16,6 +16,8 @@ public class ClientWriter {
 
     private final int port;
     private final String address;
+
+    Logger log = Logger.getLogger(ClientWriter.class.getName());
 
     public ClientWriter() {
         this.address = "localhost";
@@ -61,7 +63,7 @@ public class ClientWriter {
                 }
 
         } catch (IOException e) {
-            LOGGER.info("Can't send message to the server");
+            log.info("Can't send message to the server");
         }
     }
 

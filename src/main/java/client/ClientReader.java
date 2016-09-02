@@ -6,8 +6,8 @@ import exceptions.ClientException;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.logging.Logger;
 
-import static com.sun.xml.internal.ws.spi.db.BindingContextFactory.LOGGER;
 
 public class ClientReader {
 
@@ -18,6 +18,8 @@ public class ClientReader {
     private int port;
     private int writerPort;
     private Socket socketToServer;
+
+    Logger log = Logger.getLogger(ClientReader.class.getName());
 
     public ClientReader(int writerPort) throws ClientException {
         this.address = "localhost";
@@ -50,12 +52,12 @@ public class ClientReader {
         try {
             listenerToWriterThread.join();
         } catch (InterruptedException e) {
-            LOGGER.info("InterruptedException");
+            log.info("InterruptedException");
         }
         try {
             receiverFromServerThread.join();
         } catch (InterruptedException e) {
-            LOGGER.info("InterruptedException");
+            log.info("InterruptedException");
         }
     }
 
@@ -71,7 +73,7 @@ public class ClientReader {
             try {
                 serverSocket = new ServerSocket(writerPort);
             } catch (IOException e) {
-                LOGGER.info("Can't connect to the server");
+                log.info("Can't connect to the server");
             }
         }
         @Override
@@ -102,14 +104,14 @@ public class ClientReader {
                         }
                         out.println(line);
                     } catch (IOException e) {
-                        LOGGER.info("Connection is closed");
+                        log.info("Connection is closed");
                         System.out.println("SocketToServer is closed");
                         close();
                         return;
                     }
                 }
             } catch (IOException e) {
-                LOGGER.info("Can't connect to the server");
+                log.info("Can't connect to the server");
             }
         }
 
@@ -120,7 +122,7 @@ public class ClientReader {
                 in.close();
                 System.out.println("Session end");
             } catch (IOException e) {
-                LOGGER.info("Error when closing resources");
+                log.info("Error when closing resources");
             }
         }
 
@@ -155,7 +157,7 @@ public class ClientReader {
                     }
                 }
             } catch (IOException e) {
-                e.printStackTrace();
+                log.info("Can't send message to server");
             } finally {
                 System.out.println("Connection to server lost");
             }
@@ -166,7 +168,7 @@ public class ClientReader {
                 socketToServer.close();
                 in.close();
             } catch (IOException e) {
-                e.printStackTrace();
+                log.info("Close failed");
             }
         }
     }
