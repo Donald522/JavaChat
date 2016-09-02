@@ -55,13 +55,15 @@ public class ClientWriter {
                     if (checkHistCommand(message)) {
                         out.println( message.substring(0, 5));
                     } else if (checkSndCommand(message)) {
+                        if (! Commands.checkLenght(message)) {
+                            System.out.println("Message iss too long. It's cropped to 150 symbol.");
+                        }
                         out.println(message.substring(0, (154 < message.length() ? 154 : message.length())));
                     } else if (checkExitCommand(message)) {
                         out.println( message.substring(0, 5));
                         return;
                     }
                 }
-
         } catch (IOException e) {
             log.info("Can't send message to the server");
         }
