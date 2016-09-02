@@ -44,10 +44,9 @@ public class ClientReader {
     }
 
     public void run() {
+        receiverFromServerThread = new Thread(new ReceiverFromServer());
         listenerToWriterThread = new Thread(new ListenerToWriter(writerPort, receiverFromServerThread));
         listenerToWriterThread.start();
-        receiverFromServerThread = new Thread(new ReceiverFromServer());
-        receiverFromServerThread.setDaemon(true);
         receiverFromServerThread.start();
         try {
             listenerToWriterThread.join();
@@ -153,7 +152,7 @@ public class ClientReader {
                 in = new BufferedReader(
                                         new InputStreamReader(
                                                 socketToServer.getInputStream()));
-                while(socketToServer.isConnected() & !Thread.currentThread().isInterrupted()) {
+                while(socketToServer.isConnected() & (!Thread.currentThread().isInterrupted())) { //!Thread.currentThread().isInterrupted()
                     try {
                         message = in.readLine();
                         if (Commands.checkLenght(message)) {
@@ -173,7 +172,9 @@ public class ClientReader {
 
         private void close() {
             try {
-                socketToServer.close();
+                if(!socketToServer.isClosed()) {
+                    socketToServer.close();
+                }
                 in.close();
             } catch (IOException e) {
                 log.info("Close failed");
