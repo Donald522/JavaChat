@@ -1,6 +1,6 @@
 package server;
 
-import commands.Commands;
+import commands.MessageChecker;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -31,17 +31,17 @@ public class Message {
 
     private void setTypes(){
 
-        if(Commands.checkSndCommand(textLine)){
+        if(MessageChecker.checkSndCommand(textLine)){
             textLine=textLine.substring(4);
             publicMessage = true;
             historical = true;
         }
 
-        if(Commands.checkHistCommand(textLine)){
+        if(MessageChecker.checkHistCommand(textLine)){
             historyReqest= true;
         }
 
-        if(!Commands.checkLenght(textLine)){
+        if(!MessageChecker.checkLength(textLine)){
             errorMessage = true;
             publicMessage = false;
             historical = false;

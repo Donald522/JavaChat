@@ -1,5 +1,6 @@
 package demo;
 
+import client.ClientReader;
 import client.ClientWriter;
 
 /**
@@ -7,7 +8,11 @@ import client.ClientWriter;
  */
 public class FirstClientWriterRunner {
     public static void main(String[] args) {
-        ClientWriter clientWriter = new ClientWriter("localhost", 1112);
+        Integer port = 1115;
+        if (args.length == 1) {
+            port = Integer.parseInt(args[0]);
+        }
+        ClientWriter clientWriter = new ClientWriter("localhost", port);
         clientWriter.run();
     }
 }

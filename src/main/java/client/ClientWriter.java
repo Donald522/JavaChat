@@ -1,7 +1,5 @@
 package client;
 
-import commands.Commands;
-
 import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
@@ -10,7 +8,7 @@ import java.net.Socket;
 import java.util.Scanner;
 import java.util.logging.Logger;
 
-import static commands.Commands.*;
+import static commands.MessageChecker.*;
 
 public class ClientWriter {
 
@@ -55,7 +53,7 @@ public class ClientWriter {
                     if (checkHistCommand(message)) {
                         out.println( message.substring(0, 5));
                     } else if (checkSndCommand(message)) {
-                        if (! checkLenght(message)) {
+                        if (! checkLength(message)) {
                             System.out.println("Message iss too long. It's cropped to 150 symbol.");
                         }
                         out.println(message.substring(0, (154 < message.length() ? 154 : message.length())));

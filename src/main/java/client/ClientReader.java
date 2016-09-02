@@ -1,6 +1,6 @@
 package client;
 
-import commands.Commands;
+import commands.MessageChecker;
 import exceptions.ClientException;
 
 import java.io.*;
@@ -98,7 +98,7 @@ public class ClientReader {
                 while(isConnected()) {
                     try {
                         String line = in.readLine();
-                        if (Commands.checkExitCommand(line)) {
+                        if (MessageChecker.checkExitCommand(line)) {
                             System.out.println(line);
                             out.println(line);
                             close();
@@ -155,7 +155,7 @@ public class ClientReader {
                 while(socketToServer.isConnected() & (!Thread.currentThread().isInterrupted())) { //!Thread.currentThread().isInterrupted()
                     try {
                         message = in.readLine();
-                        if (Commands.checkLenght(message)) {
+                        if (MessageChecker.checkLength(message)) {
                             System.out.println(message);
                         }
                     } catch (IOException e) {
