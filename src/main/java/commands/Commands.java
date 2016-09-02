@@ -31,4 +31,11 @@ public class Commands {
         }
         return false;
     }
+
+    public static boolean checkNameCommand(String message) {
+        if (message != null && message.startsWith("/name")) {
+            return true;
+        }
+        return false;
+    }
 }
