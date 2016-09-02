@@ -1,16 +1,22 @@
 package server;
 
+import client.ClientWriter;
+import commands.Commands;
 import exceptions.ClientSessionException;
 
 import java.io.*;
 import java.net.Socket;
 import java.util.Queue;
+import java.util.logging.Logger;
+
+
 
 public class ClientSession implements Runnable {
     private Socket client;
     private BufferedReader readerFromSocket;
     private PrintWriter writerToSocket;
     private Queue<Message> messages;
+    private Logger log = Logger.getLogger(ClientSession.class.getName());
 
     public ClientSession(Socket client, Queue<Message> messages) throws ClientSessionException {
         this.client = client;
@@ -39,26 +45,32 @@ public class ClientSession implements Runnable {
 
     @Override
     public void run() {
-        while (client.isConnected()) {
+        while (isConnected()) {
             try {
+
+                if(!isConnected()){
+                    break;
+                }
                 String line = readerFromSocket.readLine();
                 System.out.println(line);
                 if (line != null && line.length()>0) {
+                    if(Commands.checkExitCommand(line)) {
+                        this.close();
+                        break;
+                    }
                     Message message = new Message(line,this);
                     messages.add(message);
                 }
             } catch (IOException e) {
-                e.printStackTrace();
-            }
-            if(!isConnected()){
-                break;
+                log.info(e.toString());
             }
         }
     }
 
     public boolean isConnected(){
         try {
-            client.getOutputStream().write(1);
+            client.getOutputStream().write(0);
+            client.getOutputStream().flush();
             return true;
         } catch (IOException e) {
             return false;
@@ -77,7 +89,7 @@ public class ClientSession implements Runnable {
             readerFromSocket.close();
             client.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            log.info(e.toString());
         }
     }
 }

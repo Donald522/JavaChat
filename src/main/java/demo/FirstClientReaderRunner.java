@@ -1,13 +1,21 @@
 package demo;
 
 import client.ClientReader;
+import exceptions.ClientException;
 
-/**
- * Created by anton on 01.09.16.
- */
+import java.util.logging.Logger;
+
 public class FirstClientReaderRunner {
     public static void main(String[] args) {
-        ClientReader clientReader = new ClientReader(1112);
-        clientReader.run();
+
+        Logger log = Logger.getLogger(FirstClientReaderRunner.class.getName());
+
+        ClientReader clientReader = null;
+        try {
+            clientReader = new ClientReader(1112);
+            clientReader.run();
+        } catch (ClientException e) {
+            log.info("Can't connect to the server");
+        }
     }
 }

@@ -2,11 +2,14 @@ package server;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.logging.Logger;
+
 
 public class MessageSender extends Thread {
     private Collection<ClientSession> clientList;
     private Queue<Message> messages = null;
     private MessageHistory history = new MessageHistory("history.txt");
+    private Logger log = Logger.getLogger(MessageSender.class.getName());
 
     public MessageSender(Collection<ClientSession> clientList, Queue<Message> messages) throws IOException {
         this.messages = messages;
@@ -30,8 +33,8 @@ public class MessageSender extends Thread {
     @Override
     public void run() {
         while (!isInterrupted()) {
-            if (messages.size() > 0) {
 
+            if (messages.size() > 0) {
                         Message messageToSend = messages.remove();
                         if(messageToSend.isPublic()) {
                             sendPublicMessage(messageToSend.decoratedMessage());
@@ -44,7 +47,7 @@ public class MessageSender extends Thread {
                             try {
                                 sendHistory(messageToSend.getClient());
                             } catch (IOException e) {
-                                e.printStackTrace();
+                                log.info(e.toString());
                             }
 
                         }
@@ -58,7 +61,7 @@ public class MessageSender extends Thread {
         try {
             history.closeSession();
         } catch (IOException e) {
-            e.printStackTrace();
+            log.info(e.toString());
         }
     }
 
@@ -67,8 +70,8 @@ public class MessageSender extends Thread {
         List<String> stringList = null;
         stringList = history.readLines();
         synchronized (client) {
-            for(String str : stringList) {
-                client.write(str + System.lineSeparator());
+            for(int i = stringList.size()-1;i>0;i--){
+                client.write(stringList.get(i) + System.lineSeparator());
             }
         }
     }

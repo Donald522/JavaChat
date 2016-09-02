@@ -6,7 +6,7 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Scanner;
-import commands.Commands;
+import java.util.logging.Logger;
 
 import static commands.Commands.checkExitCommand;
 import static commands.Commands.checkHistCommand;
@@ -16,7 +16,8 @@ public class ClientWriter {
 
     private final int port;
     private final String address;
-//    private Socket socket;
+
+    Logger log = Logger.getLogger(ClientWriter.class.getName());
 
     public ClientWriter() {
         this.address = "localhost";
@@ -62,7 +63,7 @@ public class ClientWriter {
                 }
 
         } catch (IOException e) {
-            e.printStackTrace();
+            log.info("Can't send message to the server");
         }
     }
 
