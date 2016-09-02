@@ -60,7 +60,7 @@ public class Message {
             nameCommand = true;
         }
 
-        if(!nameCommand && this.name == null)
+        if(!nameCommand && this.name == null && !errorMessage)
         {
             errorMessage = true;
             publicMessage = false;
