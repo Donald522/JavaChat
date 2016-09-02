@@ -16,7 +16,6 @@ class ServerConnector {
     private ServerSocket server;
     private Collection<ClientSession> clientList = new LinkedList<ClientSession>();
     private MessageSender sender;
-    boolean working = true;
     private Logger log = Logger.getLogger(ServerConnector.class.getName());
 
     public ServerConnector(int port) {
@@ -37,7 +36,7 @@ class ServerConnector {
             log.info(e.toString());
         }
         sender.start();
-        while (working) {
+        while (true) {
             try {
                 ClientSession clientSession = new ClientSession(this.server.accept(), messages);
                 pool.execute(clientSession);
@@ -68,7 +67,6 @@ class ServerConnector {
             }
             server.close();
             sender.interrupt();
-            working = false;
         } catch (IOException e) {
             log.info(e.toString());
         }

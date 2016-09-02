@@ -12,7 +12,8 @@ import java.util.Date;
 public class Message {
 
     private String textLine;
-    private String decoratedText;
+    private String name;
+
     ClientSession client;
     Date date;
 
@@ -20,13 +21,19 @@ public class Message {
     boolean historical = false;
     boolean historyReqest = false;
     boolean errorMessage = false;
+    boolean nameCommand = false;
 
-    public Message(String textLine,ClientSession client) {
+    public Message(String textLine,ClientSession client,String name) {
 
         this.date = new Date();
         this.textLine = textLine;
         this.client = client;
+        this.name = name;
         setTypes();
+    }
+
+    public Message(String textLine,ClientSession client) {
+        this(textLine,client,null);
     }
 
     private void setTypes(){
@@ -47,11 +54,24 @@ public class Message {
             historical = false;
             textLine = "=========>your message over 150 chars <==============" + System.lineSeparator();
         }
+
+        if(MessageChecker.checkNameCommand(textLine)){
+            textLine=textLine.substring(5).trim();
+            nameCommand = true;
+        }
+
+        if(!nameCommand && this.name == null)
+        {
+            errorMessage = true;
+            publicMessage = false;
+            historical = false;
+            textLine = "=========> please set yout name<==============" + System.lineSeparator();
+        }
     }
 
     public String decoratedMessage() {
         DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-        return dateFormat.format(date) + ":" + textLine + System.lineSeparator();
+        return this.name + dateFormat.format(date) + ":" + textLine + System.lineSeparator();
     }
     public String getTextLine() {
         return textLine;
@@ -87,5 +107,9 @@ public class Message {
 
     public boolean isErrorMessage() {
         return errorMessage;
+    }
+
+    public boolean isNameCommand() {
+        return nameCommand;
     }
 }

@@ -51,6 +51,9 @@ public class MessageSender extends Thread {
                             }
 
                         }
+                        if(messageToSend.isNameCommand()){
+                            changeUserName(messageToSend.getClient(),messageToSend.getTextLine());
+                        }
                         if(messageToSend.isErrorMessage()){
                             sendErrorMessage(messageToSend.getClient(),messageToSend.getTextLine());
                         }
@@ -64,6 +67,31 @@ public class MessageSender extends Thread {
             log.info(e.toString());
         }
     }
+
+    private void changeUserName(ClientSession client, String textLine) {
+        boolean unicName = true;
+        synchronized (clientList) {
+            for (ClientSession overClient : clientList) {
+                synchronized (overClient) {
+                    if (overClient.isConnected()) {
+                        if (overClient.getName().equals(textLine))
+                            unicName = false;
+                    }
+                }
+            }
+        }
+        synchronized (client) {
+            if (unicName == true) {
+                client.setName(textLine);
+                client.write("nameChanged");
+            } else {
+
+                client.write("nameNotChanged");
+
+            }
+        }
+    }
+
 
     public void sendHistory(ClientSession client) throws IOException {
 

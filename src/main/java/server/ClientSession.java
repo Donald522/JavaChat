@@ -11,11 +11,13 @@ import java.util.logging.Logger;
 
 
 public class ClientSession implements Runnable {
+
     private Socket client;
     private BufferedReader readerFromSocket;
     private PrintWriter writerToSocket;
     private Queue<Message> messages;
     private Logger log = Logger.getLogger(ClientSession.class.getName());
+    private String userName = null;
 
     public ClientSession(Socket client, Queue<Message> messages) throws ClientSessionException {
         this.client = client;
@@ -51,16 +53,16 @@ public class ClientSession implements Runnable {
                     break;
                 }
                 String line = readerFromSocket.readLine();
-                System.out.println(line);
                 if (line != null && line.length()>0) {
                     if(CheckCommands.checkExitCommand(line)) {
                         this.close();
                         break;
                     }
-                    Message message = new Message(line,this);
+                    Message message = new Message(line, this, userName);
                     synchronized (message) {
                         messages.add(message);
                     }
+
                 }
             } catch (IOException e) {
                 log.info(e.toString());
@@ -92,5 +94,13 @@ public class ClientSession implements Runnable {
         } catch (IOException e) {
             log.info(e.toString());
         }
+    }
+
+    public Object getName() {
+        return userName;
+    }
+
+    public void setName(String name) {
+        this.userName = name;
     }
 }
