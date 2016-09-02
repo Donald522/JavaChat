@@ -3,7 +3,10 @@ package commands;
 /**
  * Created by Dmitriy on 02.09.2016.
  */
-public abstract class CheckCommands {
+public class CheckCommands {
+
+    private CheckCommands() {}
+
     public static boolean checkSndCommand(String message) {
         if (message != null && message.startsWith("/snd")) {
             return true;

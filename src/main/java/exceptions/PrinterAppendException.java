@@ -5,6 +5,7 @@ package exceptions;
  */
 public class PrinterAppendException extends Exception {
     public PrinterAppendException() {
+        super();
     }
 
     public PrinterAppendException(String message) {

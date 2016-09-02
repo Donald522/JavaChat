@@ -5,6 +5,7 @@ package exceptions;
  */
 public class ClientSessionException extends Exception {
     public ClientSessionException() {
+        super();
     }
 
     public ClientSessionException(String message, Throwable cause) {
