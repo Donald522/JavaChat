@@ -1,7 +1,7 @@
 package commands;
 
 /**
- * Created by Java_10 on 02.09.2016.
+ * Created by Dmitriy on 02.09.2016.
  */
 public class CheckCommands {
     public static boolean checkSndCommand(String message) {
@@ -39,4 +39,17 @@ public class CheckCommands {
         return false;
     }
 
+    public static boolean checkNameChangedCommand(String message) {
+        if (message != null && message.equals("nameChanged")) {
+            return true;
+        }
+        return false;
+    }
+
+    public static boolean checkNameNotChangedCommand(String message) {
+        if (message != null && message.equals("nameNotChanged")) {
+            return true;
+        }
+        return false;
+    }
 }

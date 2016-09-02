@@ -33,7 +33,6 @@ public class ClientWriter {
     }
 
     public void run() {
-
         Scanner scan = new Scanner(System.in);
         String message;
 
@@ -49,14 +48,16 @@ public class ClientWriter {
             ) {
 
                 while(socket.isConnected()) {
-                    message = scan.nextLine();
+                    message = scan.nextLine().trim();
                     if (checkHistCommand(message)) {
-                        out.println( message.substring(0, 5));
-                    } else if (checkSndCommand(message)) {
-                        if (! checkLength(message)) {
+                        out.println(message.substring(0, 5));
+                    } else if (checkSndCommand(message) & message.length() > 4) {
+                        if (!checkLength(message)) {
                             System.out.println("Message iss too long. It's cropped to 150 symbol.");
                         }
                         out.println(message.substring(0, (154 < message.length() ? 154 : message.length())));
+                    } else if (checkNameCommand(message)) {
+                        out.println(message);
                     } else if (checkExitCommand(message)) {
                         out.println( message.substring(0, 5));
                         return;

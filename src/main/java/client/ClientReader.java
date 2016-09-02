@@ -8,6 +8,8 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.logging.Logger;
 
+import static commands.CheckCommands.*;
+
 
 public class ClientReader {
 
@@ -18,6 +20,8 @@ public class ClientReader {
     private int port;
     private int writerPort;
     private Socket socketToServer;
+
+    private Integer userNameAdded = -1;
 
     Logger log = Logger.getLogger(ClientReader.class.getName());
 
@@ -97,14 +101,31 @@ public class ClientReader {
                 );
                 while(isConnected()) {
                     try {
-                        String line = in.readLine();
-                        if (CheckCommands.checkExitCommand(line)) {
-                            System.out.println(line);
-                            out.println(line);
-                            close();
-                            return;
+                        synchronized (userNameAdded) {
+                            String line = in.readLine();
+                            if (userNameAdded < 1) {
+                                if (checkExitCommand(line)) {
+                                    System.out.println(line);
+                                    out.println(line);
+                                    close();
+                                    return;
+                                } else if (checkNameCommand(line)) {
+                                    if (userNameAdded != 0) {
+                                        if (line.length() <= 5) {
+                                            System.out.println("Input not null name");
+                                            continue;
+                                        } else {
+                                            userNameAdded = 1;
+                                            out.println(line);
+                                        }
+                                    } else {
+                                        System.out.println("You already have got UserName");
+                                        continue;
+                                    }
+                                }
+                                out.println(line);
+                            }
                         }
-                        out.println(line);
                     } catch (IOException e) {
                         log.info("Connection is closed");
                         System.out.println("SocketToServer is closed");
@@ -152,10 +173,18 @@ public class ClientReader {
                 in = new BufferedReader(
                                         new InputStreamReader(
                                                 socketToServer.getInputStream()));
-                while(socketToServer.isConnected() & (!Thread.currentThread().isInterrupted())) { //!Thread.currentThread().isInterrupted()
+                while(socketToServer.isConnected() & (!Thread.currentThread().isInterrupted())) {
                     try {
                         message = in.readLine();
-                        if (CheckCommands.checkLength(message)) {
+                        if (checkLength(message)) {
+                            if (checkNameChangedCommand(message)) {
+                                userNameAdded = 0;
+                                continue;
+                            }
+                            if (checkNameNotChangedCommand(message)) {
+                                userNameAdded = -1;
+                                continue;
+                            }
                             System.out.println(message);
                         }
                     } catch (IOException e) {
