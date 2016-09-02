@@ -1,21 +1,22 @@
 package Server;
 
+import Exceptions.ClientSessionException;
+
 import java.io.*;
 import java.net.Socket;
 import java.util.Queue;
 
 public class ClientSession implements Runnable {
-    private volatile boolean shutdown;
     private Socket client;
-    private BufferedReader br;
-    private PrintWriter bw;
+    private BufferedReader readerFromSocket;
+    private PrintWriter writerToSocket;
     private Queue<Message> messages;
 
-    public ClientSession(Socket client, Queue<Message> messages) {
+    public ClientSession(Socket client, Queue<Message> messages) throws ClientSessionException {
         this.client = client;
         this.messages = messages;
         try {
-            this.br = new BufferedReader(
+            this.readerFromSocket = new BufferedReader(
                     new InputStreamReader(
                             new BufferedInputStream(
                                     this.client.getInputStream()
@@ -23,7 +24,7 @@ public class ClientSession implements Runnable {
                     )
             );
 
-            this.bw = new PrintWriter(
+            this.writerToSocket = new PrintWriter(
                     new OutputStreamWriter(
                             new BufferedOutputStream(
                                     this.client.getOutputStream()
@@ -32,14 +33,15 @@ public class ClientSession implements Runnable {
             );
 
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new ClientSessionException("Can't open Streams",e);
         }
     }
 
+    @Override
     public void run() {
         while (client.isConnected()) {
             try {
-                String line = br.readLine();
+                String line = readerFromSocket.readLine();
                 System.out.println(line);
                 if (line != null && line.length()>0) {
                     Message message = new Message(line,this);
@@ -64,15 +66,15 @@ public class ClientSession implements Runnable {
     }
 
     public void write(String line) {
-        if(bw!=null) {
-            bw.write(line);
-            bw.flush();
+        if(writerToSocket !=null) {
+            writerToSocket.write(line);
+            writerToSocket.flush();
         }
     }
     public void close(){
         try {
-            bw.close();
-            br.close();
+            writerToSocket.close();
+            readerFromSocket.close();
             client.close();
         } catch (IOException e) {
             e.printStackTrace();

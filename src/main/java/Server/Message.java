@@ -71,7 +71,6 @@ public class Message {
         return date;
     }
 
-
     public boolean isPublic() {
         return publicMessage;
     }

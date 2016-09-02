@@ -1,5 +1,7 @@
 package Server;
 
+import Exceptions.ClientSessionException;
+
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.util.*;
@@ -26,7 +28,11 @@ class ServerConnector {
         ExecutorService pool = Executors.newFixedThreadPool(5000);
 
         Queue<Message> messages = new LinkedBlockingQueue<Message>();
-        this.sender = new MessageSender(clientList,messages);
+        try {
+            this.sender = new MessageSender(clientList,messages);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         sender.start();
         while (working) {
             try {
@@ -36,6 +42,8 @@ class ServerConnector {
                     clientList.add(clientSession);
                 }
             } catch (IOException e) {
+                e.printStackTrace();
+            } catch (ClientSessionException e) {
                 e.printStackTrace();
             }
         }

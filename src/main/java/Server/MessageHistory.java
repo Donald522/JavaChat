@@ -4,6 +4,7 @@ import Exceptions.PrinterAppendException;
 import org.apache.commons.io.FileUtils;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -22,8 +23,9 @@ public class MessageHistory {
         try {
                 openSession();
             outStream.append(message);
+            outStream.flush();
         } catch (IOException e) {
-            throw new IOException("io", e);
+            throw new IOException("can't print to file", e);
         }
     }
 
@@ -46,12 +48,11 @@ public class MessageHistory {
         }
     }
 
-    public List<String> readLines() {
+    public List<String> readLines() throws IOException {
         try {
             return FileUtils.readLines(new File(fileName));
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new IOException("can't read file",e);
         }
-        return null;
     }
 }

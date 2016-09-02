@@ -14,13 +14,13 @@ public class MessageSender extends Thread {
     private Queue<Message> messages = null;
     private MessageHistory history = new MessageHistory("history.txt");
 
-    public MessageSender(Collection<ClientSession> clientList, Queue<Message> messages) {
+    public MessageSender(Collection<ClientSession> clientList, Queue<Message> messages) throws IOException {
         this.messages = messages;
         this.clientList = clientList;
         try {
             history.openSession();
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new IOException("can't read history",e);
         }
     }
 
@@ -46,7 +46,13 @@ public class MessageSender extends Thread {
                             saveMessageToHistory(messageToSend.decoratedMessage());
                         }
                         if(messageToSend.isHistoryReqest()) {
-                            sendHistory(messageToSend.getClient());
+
+                            try {
+                                sendHistory(messageToSend.getClient());
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+
                         }
                         if(messageToSend.isErrorMessage()){
                             sendErrorMessage(messageToSend.getClient(),messageToSend.getTextLine());
@@ -54,9 +60,15 @@ public class MessageSender extends Thread {
                         System.out.print(messageToSend);
                     }
                 }
-            }
 
-    public void sendHistory(ClientSession client) {
+        try {
+            history.closeSession();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void sendHistory(ClientSession client) throws IOException {
 
         List<String> stringList = null;
         stringList = history.readLines();
@@ -92,7 +104,6 @@ public class MessageSender extends Thread {
     public void saveMessageToHistory(String decoratedMessage) {
         try {
             history.print(decoratedMessage);
-            history.closeSession();
         } catch (IOException e) {
             e.printStackTrace();
         }
