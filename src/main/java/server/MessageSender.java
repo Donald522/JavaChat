@@ -3,6 +3,8 @@ package server;
 import java.io.IOException;
 import java.util.*;
 
+import static com.sun.xml.internal.ws.spi.db.BindingContextFactory.LOGGER;
+
 public class MessageSender extends Thread {
     private Collection<ClientSession> clientList;
     private Queue<Message> messages = null;
@@ -30,8 +32,8 @@ public class MessageSender extends Thread {
     @Override
     public void run() {
         while (!isInterrupted()) {
-            if (messages.size() > 0) {
 
+            if (messages.size() > 0) {
                         Message messageToSend = messages.remove();
                         if(messageToSend.isPublic()) {
                             sendPublicMessage(messageToSend.decoratedMessage());
@@ -44,7 +46,7 @@ public class MessageSender extends Thread {
                             try {
                                 sendHistory(messageToSend.getClient());
                             } catch (IOException e) {
-                                e.printStackTrace();
+                                LOGGER.info(e.toString());
                             }
 
                         }
@@ -58,7 +60,7 @@ public class MessageSender extends Thread {
         try {
             history.closeSession();
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.info(e.toString());
         }
     }
 

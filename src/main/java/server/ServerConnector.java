@@ -10,6 +10,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.logging.Logger;
 
+import static com.sun.xml.internal.ws.spi.db.BindingContextFactory.LOGGER;
+
 class ServerConnector {
 
     private ServerSocket server;
@@ -22,7 +24,7 @@ class ServerConnector {
         try {
             this.server = new ServerSocket(port);
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.info(e.toString());
         }
     }
 
@@ -33,7 +35,7 @@ class ServerConnector {
         try {
             this.sender = new MessageSender(clientList,messages);
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.info(e.toString());
         }
         sender.start();
         while (working) {
@@ -44,9 +46,9 @@ class ServerConnector {
                     clientList.add(clientSession);
                 }
             } catch (IOException e) {
-                e.printStackTrace();
+                LOGGER.info(e.toString());
             } catch (ClientSessionException e) {
-                e.printStackTrace();
+                LOGGER.info(e.toString());
             }
         }
 
@@ -62,7 +64,7 @@ class ServerConnector {
             sender.interrupt();
             working = false;
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.info(e.toString());
         }
     }
 }

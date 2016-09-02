@@ -6,6 +6,8 @@ import exceptions.ClientSessionException;
 import java.io.*;
 import java.net.Socket;
 import java.util.Queue;
+import static com.sun.xml.internal.ws.spi.db.BindingContextFactory.LOGGER;
+
 
 public class ClientSession implements Runnable {
     private Socket client;
@@ -57,7 +59,7 @@ public class ClientSession implements Runnable {
                     messages.add(message);
                 }
             } catch (IOException e) {
-                e.printStackTrace();
+                LOGGER.info(e.toString());
             }
         }
     }
@@ -84,7 +86,7 @@ public class ClientSession implements Runnable {
             readerFromSocket.close();
             client.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.info(e.toString());
         }
     }
 }
