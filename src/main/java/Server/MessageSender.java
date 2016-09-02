@@ -73,8 +73,8 @@ public class MessageSender extends Thread {
         List<String> stringList = null;
         stringList = history.readLines();
         synchronized (client) {
-            for(String str : stringList) {
-                client.write(str + System.lineSeparator());
+            for(int i = stringList.size()-1;i>0;i--){
+                client.write(stringList.get(i) + System.lineSeparator());
             }
         }
     }
