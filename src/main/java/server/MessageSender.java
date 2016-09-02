@@ -74,9 +74,10 @@ public class MessageSender extends Thread {
             for (ClientSession overClient : clientList) {
                 synchronized (overClient) {
                     if (overClient.isConnected()) {
-                        if (overClient.getName() != null && overClient.getName().equals(textLine))
+                        if (overClient.getName() != null && overClient.getName().equals(textLine)) {
                             unicName = false;
-                        client.write("name exist" + System.lineSeparator());
+                            client.write("name exist" + System.lineSeparator());
+                        }
                     }
                 }
             }
@@ -84,7 +85,7 @@ public class MessageSender extends Thread {
         synchronized (client) {
             if (unicName == true) {
                 client.setName(textLine);
-                client.write("name Changed" + System.lineSeparator());
+                client.write("name changed" + System.lineSeparator());
             }
         }
     }
