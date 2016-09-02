@@ -21,8 +21,6 @@ public class ClientReader {
     private int writerPort;
     private Socket socketToServer;
 
-    private Integer userNameAdded = -1;
-
     Logger log = Logger.getLogger(ClientReader.class.getName());
 
     public ClientReader(int writerPort) throws ClientException {
@@ -101,31 +99,14 @@ public class ClientReader {
                 );
                 while(isConnected()) {
                     try {
-                        synchronized (userNameAdded) {
-                            String line = in.readLine();
-                            if (userNameAdded < 1) {
-                                if (checkExitCommand(line)) {
-                                    System.out.println(line);
-                                    out.println(line);
-                                    close();
-                                    return;
-                                } else if (checkNameCommand(line)) {
-                                    if (userNameAdded != 0) {
-                                        if (line.length() <= 5) {
-                                            System.out.println("Input not null name");
-                                            continue;
-                                        } else {
-                                            userNameAdded = 1;
-                                            out.println(line);
-                                        }
-                                    } else {
-                                        System.out.println("You already have got UserName");
-                                        continue;
-                                    }
-                                }
+                        String line = in.readLine();
+                            if (checkExitCommand(line)) {
+                                System.out.println(line);
                                 out.println(line);
+                                close();
+                                return;
                             }
-                        }
+                            out.println(line);
                     } catch (IOException e) {
                         log.info("Connection is closed");
                         System.out.println("SocketToServer is closed");
@@ -176,17 +157,7 @@ public class ClientReader {
                 while(socketToServer.isConnected() & (!Thread.currentThread().isInterrupted())) {
                     try {
                         message = in.readLine();
-                        if (checkLength(message)) {
-                            if (checkNameChangedCommand(message)) {
-                                userNameAdded = 0;
-                                continue;
-                            }
-                            if (checkNameNotChangedCommand(message)) {
-                                userNameAdded = -1;
-                                continue;
-                            }
-                            System.out.println(message);
-                        }
+                        System.out.println(message);
                     } catch (IOException e) {
                         close();
                         return;
