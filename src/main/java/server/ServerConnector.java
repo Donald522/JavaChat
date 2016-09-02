@@ -41,14 +41,15 @@ class ServerConnector {
                 ClientSession clientSession = new ClientSession(this.server.accept(), messages);
                 pool.execute(clientSession);
                 synchronized (clientList) {
+                    clientList.add(clientSession);
+
                     for(ClientSession client:clientList){
 
-                        if(client.isConnected()) {
+                        if(!client.isConnected()) {
                             clientList.remove(client);
                             client.close();
                         }
                     }
-                    clientList.add(clientSession);
                 }
             } catch (IOException e) {
                 log.info(e.toString());

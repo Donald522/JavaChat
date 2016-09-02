@@ -6,6 +6,9 @@ import exceptions.ClientException;
 import java.util.logging.Logger;
 
 public class FirstClientReaderRunner {
+
+    private FirstClientReaderRunner() {}
+
     public static void main(String[] args) {
 
         Logger log = Logger.getLogger(FirstClientReaderRunner.class.getName());

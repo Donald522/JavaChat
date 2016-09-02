@@ -14,9 +14,8 @@ public class MessageTest {
     public void shouldDecorateCorrectly() {
         Message tst = new Message("proverka", null);
         DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-        assert (tst.decoratedMessage().equals(
-                dateFormat.format(tst.date) + ":proverka" + System.lineSeparator()
-        ));
+        assert (tst.decoratedMessage().contains(":proverka" + System.lineSeparator()));
+        assert (tst.decoratedMessage().contains(dateFormat.format(tst.date).substring(0,16)));
     }
 
     @Test

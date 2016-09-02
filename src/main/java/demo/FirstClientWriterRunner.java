@@ -7,6 +7,9 @@ import client.ClientWriter;
  * Created by anton on 01.09.16.
  */
 public class FirstClientWriterRunner {
+
+    private FirstClientWriterRunner() {}
+
     public static void main(String[] args) {
         Integer port = 1115;
         if (args.length == 1) {
