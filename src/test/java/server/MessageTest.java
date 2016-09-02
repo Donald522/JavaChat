@@ -12,30 +12,30 @@ public class MessageTest {
 
     @Test
     public void shouldDecorateCorrectly() {
-        Message tst = new Message("proverka", null);
-        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-        assert (tst.decoratedMessage().contains(":proverka" + System.lineSeparator()));
-        assert (tst.decoratedMessage().contains(dateFormat.format(tst.date).substring(0,16)));
+        Message tst = new Message("proverka", null, "maxim");
+        //DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        assert (tst.decoratedMessage().contains("proverka"));
+        assert (tst.decoratedMessage().contains("maxim"));
     }
 
     @Test
     public void shouldSetTypesForSndCorrectly() {
-        Message tst = new Message("/snd proverka", null);
-        assert (tst.getTextLine().equals(" proverka"));
-        assert (tst.publicMessage == true);
-        assert (tst.historical == true);
+        Message tst = new Message("/snd proverka", null, "durak");
+        assert (tst.getTextLine().contains("proverka"));
+        assert (tst.publicMessage);
+        assert (tst.historical);
     }
 
     @Test
     public void shouldSetTypesForHistCorrectly() {
-        Message tst = new Message("/hist proverka", null);
-        assert (tst.historyReqest == true);
+        Message tst = new Message("/hist proverka", null, "durak");
+        assert (tst.historyReqest);
     }
 
     @Test
     public void shouldSetTypesForTooLongMessages() {
         Message tst = new Message("/snd 123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890",
-                null);
+                null, "durak");
         assert (tst.getTextLine().equals("=========>your message over 150 chars <==============" + System.lineSeparator()));
         assert (tst.publicMessage == false);
         assert (tst.historical == false);
