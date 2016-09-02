@@ -74,7 +74,7 @@ public class ClientReader {
             this.receiverFromServerThread = receiverFromServerThread;
             this.writerPort = writerPort;
             try {
-                serverSocket = new ServerSocket(writerPort);
+                serverSocket = new ServerSocket(this.writerPort);
             } catch (IOException e) {
                 log.info("Can't connect to the server");
             }
