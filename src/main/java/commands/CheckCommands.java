@@ -26,7 +26,7 @@ public class CheckCommands {
     }
 
     public static boolean checkLength(String message) {
-        if (message != null && (message.length() < 154 && message.length() > 0)) {
+        if (message != null && (message.length() < 150 && message.length() > 0)) {
             return true;
         }
         return false;
