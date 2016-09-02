@@ -51,7 +51,7 @@ public class ClientWriter {
                     message = scan.nextLine().trim();
                     if (checkHistCommand(message)) {
                         out.println(message.substring(0, 5));
-                    } else if (checkSndCommand(message) & message.length() > 4) {
+                    } else if (checkSndCommand(message) && message.length() > 4) {
                         String nocommandMessage = message.substring(4);
                         if (!checkLength(nocommandMessage)) {
                             System.out.println("Message iss too long. It's cropped to 150 symbol.");
