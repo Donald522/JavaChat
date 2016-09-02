@@ -74,7 +74,7 @@ public class MessageSender extends Thread {
             for (ClientSession overClient : clientList) {
                 synchronized (overClient) {
                     if (overClient.isConnected()) {
-                        if (overClient.getName().equals(textLine))
+                        if (overClient.getName() != null && overClient.getName().equals(textLine))
                             unicName = false;
                     }
                 }
