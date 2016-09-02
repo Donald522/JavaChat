@@ -120,7 +120,7 @@ public class MessageSender extends Thread {
     public void sendErrorMessage(ClientSession client,String message) {
         client.write("=============================" + System.lineSeparator() + System.lineSeparator());
         client.write(message + System.lineSeparator());
-        client.write(System.lineSeparator() + System.lineSeparator() + "=============================");
+
     }
 
     public void saveMessageToHistory(String decoratedMessage) {
