@@ -1,7 +1,5 @@
 package client;
 
-import commands.Commands;
-
 import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
@@ -10,7 +8,7 @@ import java.net.Socket;
 import java.util.Scanner;
 import java.util.logging.Logger;
 
-import static commands.Commands.*;
+import static commands.MessageChecker.*;
 
 public class ClientWriter {
 
