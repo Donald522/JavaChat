@@ -1,5 +1,7 @@
 package Server;
 
+import commands.Commands;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -29,17 +31,17 @@ public class Message {
 
     private void setTypes(){
 
-        if(textLine.startsWith("/snd")){
+        if(Commands.checkSndCommand(textLine)){
             textLine=textLine.substring(4);
             publicMessage = true;
             historical = true;
         }
 
-        if(textLine.equals("/hist")){
+        if(Commands.checkHistCommand(textLine)){
             historyReqest= true;
         }
 
-        if(textLine.length() > 15){
+        if(Commands.checkLenght(textLine)){
             errorMessage = true;
             publicMessage = false;
             historical = false;

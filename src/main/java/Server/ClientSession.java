@@ -1,6 +1,7 @@
 package Server;
 
 import Exceptions.ClientSessionException;
+import commands.Commands;
 
 import java.io.*;
 import java.net.Socket;
@@ -44,6 +45,11 @@ public class ClientSession implements Runnable {
                 String line = readerFromSocket.readLine();
                 System.out.println(line);
                 if (line != null && line.length()>0) {
+
+                    if (Commands.checkExitCommand(line)) {
+                        this.close();
+                        break;
+                    }
                     Message message = new Message(line,this);
                     messages.add(message);
                 }

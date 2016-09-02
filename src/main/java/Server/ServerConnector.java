@@ -8,6 +8,7 @@ import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.logging.Logger;
 
 class ServerConnector {
 
@@ -15,6 +16,7 @@ class ServerConnector {
     private Collection<ClientSession> clientList = new LinkedList<ClientSession>();
     private MessageSender sender;
     boolean working = true;
+    private Logger LOGGER = Logger.getLogger("InfoLogging");
 
     public ServerConnector(int port) {
         try {
