@@ -64,7 +64,7 @@ public class Message {
             errorMessage = true;
             publicMessage = false;
             historical = false;
-            textLine = "=========> please set yout name<==============" + System.lineSeparator();
+            textLine = "=========> please set your name<==============" + System.lineSeparator();
         }
     }
 
