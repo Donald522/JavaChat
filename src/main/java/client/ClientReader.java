@@ -154,7 +154,7 @@ public class ClientReader {
                 in = new BufferedReader(
                                         new InputStreamReader(
                                                 socketToServer.getInputStream()));
-                while(socketToServer.isConnected() & (!Thread.currentThread().isInterrupted())) {
+                while(socketToServer.isConnected() && (!Thread.currentThread().isInterrupted())) {
                     try {
                         message = in.readLine();
                         if(message != null && message.length() > 0) {
