@@ -42,6 +42,13 @@ class ServerConnector {
                 ClientSession clientSession = new ClientSession(this.server.accept(), messages);
                 pool.execute(clientSession);
                 synchronized (clientList) {
+                    for(ClientSession client:clientList){
+
+                        if(client.isConnected()) {
+                            clientList.remove(client);
+                            client.close();
+                        }
+                    }
                     clientList.add(clientSession);
                 }
             } catch (IOException e) {

@@ -59,7 +59,9 @@ public class ClientSession implements Runnable {
                         break;
                     }
                     Message message = new Message(line,this);
-                    messages.add(message);
+                    synchronized (message) {
+                        messages.add(message);
+                    }
                 }
             } catch (IOException e) {
                 log.info(e.toString());

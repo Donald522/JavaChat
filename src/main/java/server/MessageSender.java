@@ -76,16 +76,13 @@ public class MessageSender extends Thread {
         }
     }
     public void sendPublicMessage(String decoratedMessage) {
-
-        for (ClientSession client : clientList) {
-            synchronized (client) {
-                if (client.isConnected()) {
-                    client.write(decoratedMessage);
-                    System.out.print(decoratedMessage);
-                } else {
-                    clientList.remove(client);
-                    client.close();
-
+        synchronized (clientList) {
+            for (ClientSession client : clientList) {
+                synchronized (client) {
+                    if (client.isConnected()) {
+                        client.write(decoratedMessage);
+                        System.out.print(decoratedMessage);
+                    }
                 }
             }
         }
