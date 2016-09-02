@@ -1,5 +1,6 @@
-package Server;
+package server;
 
+import commands.Commands;
 import exceptions.ClientSessionException;
 
 import java.io.*;
@@ -39,26 +40,32 @@ public class ClientSession implements Runnable {
 
     @Override
     public void run() {
-        while (client.isConnected()) {
+        while (isConnected()) {
             try {
+
+                if(!isConnected()){
+                    break;
+                }
                 String line = readerFromSocket.readLine();
                 System.out.println(line);
                 if (line != null && line.length()>0) {
+                    if(Commands.checkExitCommand(line)) {
+                        this.close();
+                        break;
+                    }
                     Message message = new Message(line,this);
                     messages.add(message);
                 }
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            if(!isConnected()){
-                break;
-            }
         }
     }
 
     public boolean isConnected(){
         try {
-            client.getOutputStream().write(1);
+            client.getOutputStream().write(0);
+            client.getOutputStream().flush();
             return true;
         } catch (IOException e) {
             return false;

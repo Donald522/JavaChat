@@ -41,7 +41,7 @@ public class Message {
             historyReqest= true;
         }
 
-        if(Commands.checkLenght(textLine)){
+        if(!Commands.checkLenght(textLine)){
             errorMessage = true;
             publicMessage = false;
             historical = false;
