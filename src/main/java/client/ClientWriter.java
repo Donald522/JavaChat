@@ -6,8 +6,8 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Scanner;
-import commands.Commands;
 
+import static com.sun.xml.internal.ws.spi.db.BindingContextFactory.LOGGER;
 import static commands.Commands.checkExitCommand;
 import static commands.Commands.checkHistCommand;
 import static commands.Commands.checkSndCommand;
@@ -16,7 +16,6 @@ public class ClientWriter {
 
     private final int port;
     private final String address;
-//    private Socket socket;
 
     public ClientWriter() {
         this.address = "localhost";
@@ -62,7 +61,7 @@ public class ClientWriter {
                 }
 
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.info("Can't send message to the server");
         }
     }
 

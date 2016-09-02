@@ -1,17 +1,15 @@
 package client;
 
 import commands.Commands;
+import exceptions.ClientException;
 
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+
+import static com.sun.xml.internal.ws.spi.db.BindingContextFactory.LOGGER;
 
 public class ClientReader {
-
-    private ExecutorService thread1 = Executors.newSingleThreadExecutor();
-    private ExecutorService thread2 = Executors.newSingleThreadExecutor();
 
     Thread listenerToWriterThread;
     Thread receiverFromServerThread;
@@ -21,25 +19,25 @@ public class ClientReader {
     private int writerPort;
     private Socket socketToServer;
 
-    public ClientReader(int writerPort) {
+    public ClientReader(int writerPort) throws ClientException {
         this.address = "localhost";
         this.port = 27015;
         this.writerPort = writerPort;
         initClientReader();
     }
 
-    public ClientReader(int writerPort, String address, int port) {
+    public ClientReader(int writerPort, String address, int port) throws ClientException {
         this.address = address;
         this.port = port;
         this.writerPort = writerPort;
         initClientReader();
     }
 
-    private void initClientReader() {
+    private void initClientReader() throws ClientException {
         try {
             this.socketToServer = new Socket(address, port);
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new ClientException("Can't connect to the server");
         }
     }
 
@@ -49,19 +47,15 @@ public class ClientReader {
         receiverFromServerThread = new Thread(new ReceiverFromServer());
         receiverFromServerThread.setDaemon(true);
         receiverFromServerThread.start();
-//        thread1.execute(new ListenerToWriter(writerPort));
-//        thread2.execute(new ReceiverFromServer());
-//        thread1.shutdown();
-//        thread2.shutdown();
         try {
             listenerToWriterThread.join();
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            LOGGER.info("InterruptedException");
         }
         try {
             receiverFromServerThread.join();
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            LOGGER.info("InterruptedException");
         }
     }
 
@@ -77,7 +71,7 @@ public class ClientReader {
             try {
                 serverSocket = new ServerSocket(writerPort);
             } catch (IOException e) {
-                e.printStackTrace();
+                LOGGER.info("Can't connect to the server");
             }
         }
         @Override
@@ -108,13 +102,14 @@ public class ClientReader {
                         }
                         out.println(line);
                     } catch (IOException e) {
+                        LOGGER.info("Connection is closed");
                         System.out.println("SocketToServer is closed");
                         close();
                         return;
                     }
                 }
             } catch (IOException e) {
-                e.printStackTrace();
+                LOGGER.info("Can't connect to the server");
             }
         }
 
@@ -125,7 +120,7 @@ public class ClientReader {
                 in.close();
                 System.out.println("Session end");
             } catch (IOException e) {
-                e.printStackTrace();
+                LOGGER.info("Error when closing resources");
             }
         }
 
@@ -175,5 +170,4 @@ public class ClientReader {
             }
         }
     }
-
 }
