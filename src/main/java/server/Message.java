@@ -55,7 +55,7 @@ public class Message {
             textLine = "=========>your message over 150 chars <==============" + System.lineSeparator();
         }
 
-        if(MessageChecker.checkNameCommand(textLine)){
+        if(CheckCommands.checkNameCommand(textLine)){
             textLine=textLine.substring(5).trim();
             nameCommand = true;
         }
