@@ -2,13 +2,14 @@ package server;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.logging.Logger;
 
-import static com.sun.xml.internal.ws.spi.db.BindingContextFactory.LOGGER;
 
 public class MessageSender extends Thread {
     private Collection<ClientSession> clientList;
     private Queue<Message> messages = null;
     private MessageHistory history = new MessageHistory("history.txt");
+    private Logger log = Logger.getLogger(MessageSender.class.getName());
 
     public MessageSender(Collection<ClientSession> clientList, Queue<Message> messages) throws IOException {
         this.messages = messages;
@@ -46,7 +47,7 @@ public class MessageSender extends Thread {
                             try {
                                 sendHistory(messageToSend.getClient());
                             } catch (IOException e) {
-                                LOGGER.info(e.toString());
+                                log.info(e.toString());
                             }
 
                         }
@@ -60,7 +61,7 @@ public class MessageSender extends Thread {
         try {
             history.closeSession();
         } catch (IOException e) {
-            LOGGER.info(e.toString());
+            log.info(e.toString());
         }
     }
 
