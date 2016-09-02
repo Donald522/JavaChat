@@ -83,11 +83,7 @@ public class MessageSender extends Thread {
         synchronized (client) {
             if (unicName == true) {
                 client.setName(textLine);
-                client.write("nameChanged");
-            } else {
-
-                client.write("nameNotChanged");
-
+                client.write("nameChanged" + System.lineSeparator());
             }
         }
     }

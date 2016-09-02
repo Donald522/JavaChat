@@ -71,7 +71,7 @@ public class Message {
 
     public String decoratedMessage() {
         DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-        return this.name + dateFormat.format(date) + ":" + textLine + System.lineSeparator();
+        return this.name + " " + dateFormat.format(date) + ":" + textLine + System.lineSeparator();
     }
     public String getTextLine() {
         return textLine;
