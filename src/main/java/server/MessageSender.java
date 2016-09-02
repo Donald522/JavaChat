@@ -1,13 +1,7 @@
-package Server;
+package server;
 
-import org.apache.commons.io.FileUtils;
-
-import java.io.File;
 import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.concurrent.LinkedBlockingQueue;
 
 public class MessageSender extends Thread {
     private Collection<ClientSession> clientList;

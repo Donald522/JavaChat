@@ -24,11 +24,4 @@ public class Commands {
         }
         return false;
     }
-
-    public static boolean checkLenght(String message) {
-        if (message.length()>0&&message.length()<150) {
-            return true;
-        }
-        return false;
-    }
 }

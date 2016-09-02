@@ -1,10 +1,8 @@
-package Server;
+package server;
 
-import Exceptions.PrinterAppendException;
 import org.apache.commons.io.FileUtils;
 
 import java.io.*;
-import java.util.ArrayList;
 import java.util.List;
 
 /**

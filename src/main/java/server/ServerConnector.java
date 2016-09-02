@@ -1,6 +1,6 @@
-package Server;
+package server;
 
-import Exceptions.ClientSessionException;
+import exceptions.ClientSessionException;
 
 import java.io.IOException;
 import java.net.ServerSocket;
