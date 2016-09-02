@@ -31,9 +31,9 @@ public class CommandsTest {
     @Test
     public void shouldCheckLengthCorrect () {
         Commands tst = new Commands();
-        assert (!Commands.checkLenght(""));
-        assert (!Commands.checkLenght("/snd 123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890"));
-        assert (Commands.checkLenght("alalalalala"));
+        assert (!Commands.checkLength(""));
+        assert (!Commands.checkLength("/snd 123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890"));
+        assert (Commands.checkLength("alalalalala"));
     }
 
 }
