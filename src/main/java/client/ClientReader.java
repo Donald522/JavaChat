@@ -155,7 +155,7 @@ public class ClientReader {
                 while(socketToServer.isConnected() & (!Thread.currentThread().isInterrupted())) { //!Thread.currentThread().isInterrupted()
                     try {
                         message = in.readLine();
-                        if (Commands.checkLenght(message)) {
+                        if (Commands.checkLength(message)) {
                             System.out.println(message);
                         }
                     } catch (IOException e) {

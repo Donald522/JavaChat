@@ -1,8 +1,6 @@
+
 package commands;
 
-/**
- * Created by Dmitriy on 02.09.2016.
- */
 public class Commands {
     public static boolean checkSndCommand(String message) {
         if (message != null && message.startsWith("/snd")) {
@@ -25,7 +23,7 @@ public class Commands {
         return false;
     }
 
-    public static boolean checkLenght(String message) {
+    public static boolean checkLength(String message) {
         if (message != null && (message.length() < 150 && message.length() > 0)) {
             return true;
         }
